@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.talelin.latticy.mapper.ThemeSpuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="io.github.talelin.latticy.model.ThemeSpuDO">
+        <id column="id" property="id" />
+        <result column="theme_id" property="themeId" />
+        <result column="spu_id" property="spuId" />
+    </resultMap>
+
+    <resultMap id="ThemeSpuResultMap" type="io.github.talelin.latticy.vo.ThemeSpuVo">
+        <result column="id" property="id"></result>
+        <result column="title" property="title"></result>
+        <result column="subtitle" property="subtitle"></result>
+        <result column="img" property="img"></result>
+        <result column="tid" property="tid"></result>
+    </resultMap>
+
+    <select id="selectThemeSpusByTheme" parameterType="long" resultMap="ThemeSpuResultMap">
+        select
+        s.id,
+               s.title,
+               s.subtitle,
+               s.img,
+        ts.id as tid
+        from spu s
+        join theme_spu ts
+        on s.id = ts.spu_id
+        where ts.theme_id = #{themeId}
+        and s.delete_time is NULL
+    </select>
+
+    <select id="selectSpuNotSelectedByTheme" parameterType="long" resultType="io.github.talelin.latticy.model.SpuDO">
+        select s.id id, s.title
+        from spu s
+        where s.delete_time is null
+          and
+                s.id not in (
+                select ts.spu_id
+                from theme_spu ts
+                where
+                    ts.theme_id = #{themeId}
+            )
+    </select>
+</mapper>

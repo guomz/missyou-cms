@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.talelin.latticy.mapper.ActivityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="io.github.talelin.latticy.model.ActivityDO">
+        <id column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="delete_time" property="deleteTime" />
+        <result column="title" property="title" />
+        <result column="description" property="description" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="remark" property="remark" />
+        <result column="online" property="online" />
+        <result column="entrance_img" property="entranceImg" />
+        <result column="internal_top_img" property="internalTopImg" />
+        <result column="name" property="name" />
+    </resultMap>
+
+    <resultMap id="DetailResultMap" type="io.github.talelin.latticy.vo.ActivityDetailVo" extends="BaseResultMap">
+        <collection property="couponIds" ofType="long">
+            <constructor>
+                <arg column="coupon_id"></arg>
+            </constructor>
+        </collection>
+    </resultMap>
+
+    <select id="selectActivityDetail" parameterType="long" resultMap="DetailResultMap">
+        select
+        a.id,
+               a.create_time,
+               a.update_time,
+               a.title,
+               a.description,
+               a.start_time,
+               a.end_time,
+               a.remark,
+               a.online,
+               a.entrance_img,
+               a.internal_top_img,
+               a.name,
+               ac.coupon_id
+        from activity a
+        left join activity_coupon ac
+        on a.id = ac.activity_id
+        where
+        a.id = #{id}
+        and a.delete_time is NULL
+    </select>
+
+    <insert id="insertActivityCoupon" parameterType="io.github.talelin.latticy.model.ActivityCouponDo">
+        insert into activity_coupon
+        (id,activity_id,coupon_id)
+        values
+        (#{id}, #{activityId}, #{couponId})
+    </insert>
+
+    <delete id="deleteActivityCouponByCoupon" parameterType="long">
+        delete from activity_coupon
+        where
+        coupon_id = #{couponId}
+    </delete>
+
+    <delete id="deleteActivityCouponByActivity" parameterType="long">
+        delete from activity_coupon
+        where
+            activity_id = #{activityId}
+    </delete>
+</mapper>
