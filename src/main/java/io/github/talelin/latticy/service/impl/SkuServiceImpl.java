@@ -2,11 +2,13 @@ package io.github.talelin.latticy.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.github.talelin.autoconfigure.exception.ForbiddenException;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
 import io.github.talelin.autoconfigure.exception.ParameterException;
 import io.github.talelin.latticy.common.mybatis.Page;
 import io.github.talelin.latticy.dto.SkuDto;
 import io.github.talelin.latticy.dto.SpecKeyValueDto;
+import io.github.talelin.latticy.enums.SpuOnlineEnums;
 import io.github.talelin.latticy.model.*;
 import io.github.talelin.latticy.mapper.SkuMapper;
 import io.github.talelin.latticy.service.*;
@@ -76,6 +78,16 @@ public class SkuServiceImpl extends ServiceImpl<SkuMapper, SkuDO> implements Sku
     @Transactional
     public void updateSku(SkuDto skuDto, Long id) {
         SkuDO skuDO = checkById(id);
+        //如果改变绑定的spu，检查之前的spu是否还有sku，没有则不允许解除绑定
+        //应先下架spu
+        if (!skuDO.getSpuId().equals(skuDto.getSpuId())){
+            SpuDO preSpu = spuService.checkById(skuDO.getSpuId());
+            if (getSkuBySpu(preSpu.getId()).size() <= 1
+                    && preSpu.getOnline().equals(SpuOnlineEnums.ONLINE.getCode())){
+                log.error("该操作会导致spu无sku，请先下架spu {}", skuDO.getSpuId());
+                throw new ForbiddenException(24);
+            }
+        }
         BeanUtils.copyProperties(skuDto, skuDO);
         SpuDO spuDO = spuService.checkById(skuDto.getSpuId());
         //设置分类
