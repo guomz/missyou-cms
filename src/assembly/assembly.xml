@@ -6,7 +6,7 @@
     </formats>
     <fileSets>
         <fileSet>
-            <directory>src/main/assembly/bin</directory>
+            <directory>src/assembly/bin</directory>
             <outputDirectory></outputDirectory>
             <fileMode>0755</fileMode>
         </fileSet>
@@ -25,12 +25,12 @@
             <directory>src/main/resources</directory>
             <outputDirectory>config</outputDirectory>
             <includes>
-                <include>application.properties</include>
-                <include>application-dev.properties</include>
-                <include>application-test.properties</include>
-                <include>application-prod.properties</include>
+                <include>application.yml</include>
+                <include>application-dev.yml</include>
+                <include>application-test.yml</include>
+                <include>application-prod.yml</include>
                 <include>code-message.properties</include>
-                <include>logback.xml</include>
+                <include>logback-spring.xml</include>
             </includes>
         </fileSet>
         <fileSet>
