@@ -179,8 +179,15 @@ public class SkuServiceImpl extends ServiceImpl<SkuMapper, SkuDO> implements Sku
 
     @Override
     public Map<String, Long> getSkuSpecValue(Long skuId, Long specKeyId) {
-        SkuSpecDO skuSpecDO = skuSpecService.getBySkuAndKeyId(skuId, specKeyId);
+        SkuSpecDO skuSpecDO;
         Map<String, Long> map = new HashMap<>();
+        try {
+            skuSpecDO = skuSpecService.getBySkuAndKeyId(skuId, specKeyId);
+        }catch (NotFoundException e){
+            log.warn("该规格还未选择");
+            map.put("value_id", null);
+            return map;
+        }
         map.put("value_id", skuSpecDO.getValueId());
         return map;
     }

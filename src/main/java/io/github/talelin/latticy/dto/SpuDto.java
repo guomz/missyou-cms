@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -28,7 +29,7 @@ public class SpuDto {
      * 文本型价格，有时候SPU需要展示的是一个范围，或者自定义平均价格
      */
     @NotNull(message = "价格为空")
-    private String price;
+    private BigDecimal price;
 
     /**
      * 某种规格可以直接附加单品图片
@@ -42,7 +43,7 @@ public class SpuDto {
 
     private String img;
 
-    private String discountPrice;
+    private BigDecimal discountPrice;
 
     private String description;
 

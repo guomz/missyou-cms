@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
+
 /**
  * @author generator@TaleLin
  * @since 2021-09-29
@@ -32,7 +34,7 @@ public class SpuDO extends BaseModel {
     /**
      * 文本型价格，有时候SPU需要展示的是一个范围，或者自定义平均价格
      */
-    private String price;
+    private BigDecimal price;
 
     /**
      * 某种规格可以直接附加单品图片
@@ -47,7 +49,7 @@ public class SpuDO extends BaseModel {
     @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String img;
 
-    private String discountPrice;
+    private BigDecimal discountPrice;
 
     private String description;
 

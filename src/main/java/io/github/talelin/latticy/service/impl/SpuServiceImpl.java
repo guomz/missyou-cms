@@ -95,7 +95,7 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuDO> implements Spu
     @Transactional
     public void updateSpu(Long id, SpuDto spuDto) {
         SpuDO spuDO = checkById(id);
-        //如果有下线改上线，需要检查是否有sku
+        //如果有下架改上架，需要检查是否有sku，如果没有sku则无法上架
         if (SpuOnlineEnums.OFFLINE.getCode().equals(spuDO.getOnline())
                 && SpuOnlineEnums.ONLINE.getCode().equals(spuDto.getOnline())){
             if (skuService.getSkuBySpu(id).isEmpty()){
