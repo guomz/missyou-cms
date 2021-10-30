@@ -1,2 +1,2 @@
 #!/bin/bash
-nohup java -jar latticy-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod &
+nohup java -jar latticy-sleeve-0.2.0.jar --spring.profiles.active=prod &
